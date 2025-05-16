@@ -1,6 +1,6 @@
 import CreateProductUseCase from "./create.product.usecase";
-const input =
-  id: "",
+const input = {
+  id: "1",
   name: "John",
   price: 100
 };
@@ -40,14 +40,14 @@ describe("Unit test create product use case", () => {
     );
   });
 
-  it("should thrown an error when price is missing", async () => {
-    const productRepository = MockRepository();
-    const productCreateUseCase = new CreateProductUseCase(productRepository);
+it("should throw an error when price is missing", async () => {
+  const productRepository = MockRepository();
+  const productCreateUseCase = new CreateProductUseCase(productRepository);
 
-    input.price = "";
+  input.price = null;
 
-    await expect(productCreateUseCase.execute(input)).rejects.toThrow(
-      "Price is required"
-    );
+  await expect(productCreateUseCase.execute(input)).rejects.toThrow(
+    "Price is required"
+  );
   });
 });
