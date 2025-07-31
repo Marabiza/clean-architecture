@@ -12,8 +12,9 @@ export default class ProductYupValidator
         .shape({
           id: yup.string().required("Id is required"),
           name: yup.string().required("Name is required"),
-          price: yup.string().required("Price is required"),
-
+          price: yup.number().transform((value, originalValue) => {
+            return originalValue === null || originalValue === undefined || originalValue === "" ? undefined : value;
+          }).required("Price is required").min(0.01, "Price must be greater than zero"),
         })
         .validateSync(
           {

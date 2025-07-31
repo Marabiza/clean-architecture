@@ -17,15 +17,17 @@ export default class CreateProductUseCase {
     input: InputCreateProductDto
   ): Promise<OutputCreateProductDto> {
     const product = ProductFactory.create(
-      input.id,
+      "a",
       input.name,
       input.price
-  );
+    );
+
+    await this.productRepository.create(product as any);
 
     return {
       id: product.id,
       name: product.name,
-      price: product.price
-      };
+      price: product.price,
+    };
   }
 }

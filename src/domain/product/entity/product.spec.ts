@@ -109,6 +109,7 @@ describe("Product unit tests", () => {
 
   it("should validate successfully with valid data", () => {
     const product = new Product("123", "Product 1", 100);
-    expect(product.validate()).toBe(true);
+    expect(() => product.validate()).not.toThrow();
+    expect(product.notification.hasErrors()).toBe(false);
   });
 });
