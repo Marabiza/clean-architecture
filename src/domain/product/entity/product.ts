@@ -1,28 +1,20 @@
-import ProductInterface from "./product.interface";
-import Notification from "../../@shared/notification/notification";
+import Entity from "../../@shared/entity/entity.abstract";
 import NotificationError from "../../@shared/notification/notification.error";
+import Notification from "../../@shared/notification/notification";
+import ProductInterface from "./product.interface";
 
-export default class Product implements ProductInterface {
-  private _id: string;
+export default class Product extends Entity implements ProductInterface {
   private _name: string;
   private _price: number;
-  public notification: Notification;
 
   constructor(id: string, name: string, price: number) {
-    this.notification = new Notification();
+    super();
     this._id = id;
     this._name = name;
     this._price = price;
     this.validate();
-    if (this.notification.hasErrors()) {
-      throw new NotificationError(this.notification.getErrors());
-    }
   }
 
-  get id(): string {
-    return this._id;
-  }
-  
   get name(): string {
     return this._name;
   }
@@ -34,39 +26,48 @@ export default class Product implements ProductInterface {
   changeName(name: string): void {
     this._name = name;
     this.validate();
-    if (this.notification.hasErrors()) {
-      throw new NotificationError(this.notification.getErrors());
-    }
   }
 
   changePrice(price: number): void {
     this._price = price;
     this.validate();
-    if (this.notification.hasErrors()) {
-      throw new NotificationError(this.notification.getErrors());
-    }
   }
 
   validate(): boolean {
-    this.notification = new Notification();
+    const notification = new Notification();
+    
     if (this._id.length === 0) {
-      this.notification.addError({
+      notification.addError({
         context: "product",
         message: "Id is required",
       });
     }
+
     if (this._name.length === 0) {
-      this.notification.addError({
+      notification.addError({
         context: "product",
         message: "Name is required",
       });
     }
+
     if (this._price < 0) {
-      this.notification.addError({
+      notification.addError({
         context: "product",
         message: "Price must be greater than zero",
       });
     }
-    return !this.notification.hasErrors();
+
+    if (this._price === 0) {
+      notification.addError({
+        context: "product",
+        message: "Price must be greater than zero",
+      });
+    }
+
+    if (notification.hasErrors()) {
+      throw new NotificationError(notification.getErrors());
+    }
+
+    return true;
   }
 }
